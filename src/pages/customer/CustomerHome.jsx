@@ -73,10 +73,10 @@ const CustomerHome = () => {
     const firstName = user?.name?.split(' ')[0] || 'there';
 
     const [recommendations, setRecommendations] = useState([]);
-    const [recLoading, setRecLoading]           = useState(true);
-    const [recError, setRecError]               = useState('');
-    const [organicFilter, setOrganicFilter]     = useState(false);
-    const [searchVal, setSearchVal]             = useState('');
+    const [recLoading, setRecLoading] = useState(true);
+    const [recError, setRecError] = useState('');
+    const [organicFilter, setOrganicFilter] = useState(false);
+    const [searchVal, setSearchVal] = useState('');
 
     const fetchRecs = async () => {
         try {
@@ -107,10 +107,10 @@ const CustomerHome = () => {
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
 
             {/* ── Notification bar ────────────────────────────────────────── */}
-            <div className="card" style={{ backgroundColor: 'var(--secondary)', color: 'white', padding: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundImage: 'linear-gradient(to right, var(--secondary), var(--primary))' }}>
+            {/* <div className="card" style={{ backgroundColor: 'var(--secondary)', color: 'white', padding: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundImage: 'linear-gradient(to right, var(--secondary), var(--primary))' }}>
                 <Bell size={20} />
                 <span style={{ fontWeight: 500 }}>Your order #ORD-1029 is out for delivery!</span>
-            </div>
+            </div> */}
 
             {/* ── Welcome banner ──────────────────────────────────────────── */}
             <div className="card" style={{ backgroundColor: 'var(--primary)', color: 'var(--white)', padding: '3rem 2rem', marginBottom: '2rem', backgroundImage: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)', boxShadow: 'var(--shadow-lg)' }}>
@@ -134,15 +134,15 @@ const CustomerHome = () => {
             {/* ── Quick actions ───────────────────────────────────────────── */}
             <div className="grid grid-cols-4 gap-4" style={{ marginBottom: '2.5rem' }}>
                 {(isGuest ? [
-                    { to: '/products',      icon: Package,       label: 'Browse Products' },
-                    { to: '/traceability',  icon: MapPin,        label: 'Track Product' },
-                    { to: '/login',         icon: ClipboardList, label: 'My Orders' },
-                    { to: '/login',         icon: LifeBuoy,      label: 'Support' },
+                    { to: '/products', icon: Package, label: 'Browse Products' },
+                    { to: '/traceability', icon: MapPin, label: 'Track Product' },
+                    { to: '/login', icon: ClipboardList, label: 'My Orders' },
+                    { to: '/login', icon: LifeBuoy, label: 'Support' },
                 ] : [
-                    { to: '/customer/products',     icon: Package,       label: 'Browse Products' },
-                    { to: '/customer/orders',       icon: ClipboardList, label: 'My Orders' },
-                    { to: '/customer/traceability', icon: MapPin,        label: 'Track Product' },
-                    { to: '/customer/support',      icon: LifeBuoy,      label: 'Support' },
+                    { to: '/customer/products', icon: Package, label: 'Browse Products' },
+                    { to: '/customer/orders', icon: ClipboardList, label: 'My Orders' },
+                    { to: '/customer/traceability', icon: MapPin, label: 'Track Product' },
+                    { to: '/customer/support', icon: LifeBuoy, label: 'Support' },
                 ]).map(({ to, icon: Icon, label }) => (
                     <Link key={to} to={to} className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', textDecoration: 'none', color: 'inherit', transition: 'all 0.2s', borderBottom: '3px solid transparent' }}
                         onMouseEnter={e => e.currentTarget.style.borderBottomColor = 'var(--primary)'}
@@ -180,7 +180,7 @@ const CustomerHome = () => {
 
             {recLoading ? (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.25rem', marginBottom: '2.5rem' }}>
-                    {[1,2,3,4].map(i => (
+                    {[1, 2, 3, 4].map(i => (
                         <div key={i} style={{ background: '#fff', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden' }}>
                             <div style={{ height: 130, background: '#f3f4f6' }} />
                             <div style={{ padding: '0.85rem' }}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Leaf, User, Tractor, ShieldCheck, Truck, MapPin } from 'lucide-react';
+import { Leaf, User, Tractor, ShieldCheck, Truck, MapPin, AlertCircle } from 'lucide-react';
 
 const SRI_LANKA_CITIES = [
     'Colombo', 'Kandy', 'Galle', 'Jaffna', 'Negombo', 'Batticaloa',
@@ -118,8 +118,8 @@ const AuthPage = ({ onLogin }) => {
     const needsCity = !isLogin && (role === 'customer' || role === 'driver');
 
     return (
-        <div className="auth-page">
-            <div className="auth-card">
+        <div className="auth-page page-transition">
+            <div className="auth-card animate-tile">
                 <div className="auth-header flex flex-col items-center">
                     <div className="bg-primary flex items-center justify-center" style={{ width: 64, height: 64, borderRadius: '50%', color: 'white' }}>
                         <Leaf size={32} />
@@ -224,8 +224,9 @@ const AuthPage = ({ onLogin }) => {
                     </button>
 
                     {error && (
-                        <div style={{ marginTop: '1rem', padding: '0.75rem', background: '#fee', border: '1px solid #fcc', borderRadius: '8px', color: '#c33', fontSize: '0.875rem' }}>
-                            ⚠️ {error}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', padding: '0.75rem', background: '#fee', border: '1px solid #fcc', borderRadius: '8px', color: '#c33', fontSize: '0.875rem' }}>
+                            <AlertCircle size={16} className="flex-shrink-0" />
+                            <span>{error}</span>
                         </div>
                     )}
                 </form>

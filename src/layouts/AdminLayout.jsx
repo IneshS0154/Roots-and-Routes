@@ -10,8 +10,6 @@ import {
     Truck,
     BarChart,
     Star,
-    Settings,
-    Bell,
     Menu,
     LogOut,
     Leaf,
@@ -37,8 +35,6 @@ const AdminLayout = () => {
         { path: '/admin/deliveries', name: 'Delivery Management', icon: Truck },
         { path: '/admin/analytics', name: 'Analytics & Reports', icon: BarChart },
         { path: '/admin/reviews', name: 'Review Management', icon: Star },
-        { path: '/admin/settings', name: 'System Settings', icon: Settings },
-        { path: '/admin/notifications', name: 'Notifications', icon: Bell },
     ];
 
     return (
@@ -90,11 +86,6 @@ const AdminLayout = () => {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                        <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => navigate('/admin/notifications')}>
-                            <Bell size={24} color="var(--text-muted)" />
-                            <div style={{ position: 'absolute', top: -2, right: -2, width: 10, height: 10, backgroundColor: 'var(--danger)', borderRadius: '50%', border: '2px solid white' }}></div>
-                        </div>
-
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div style={{ width: 36, height: 36, borderRadius: '50%', backgroundColor: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
                                 A

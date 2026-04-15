@@ -63,8 +63,9 @@ const AdminDashboard = () => {
             </div>
 
             {error && (
-                <div style={{ padding: '0.75rem 1rem', background: '#fee', border: '1px solid #fcc', borderRadius: 8, color: '#c33', fontSize: '0.875rem' }}>
-                    ⚠️ {error} — Showing cached or empty data.
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1rem', background: '#fee', border: '1px solid #fcc', borderRadius: 8, color: '#c33', fontSize: '0.875rem' }}>
+                    <AlertCircle size={16} />
+                    <span>{error} — Showing cached or empty data.</span>
                 </div>
             )}
 
@@ -76,7 +77,7 @@ const AdminDashboard = () => {
                     { label: 'Revenue (Total)', value: kpi.totalRevenue != null ? fmtLKR(kpi.totalRevenue) : '—', sub: 'All time revenue', icon: DollarSign, accent: 'var(--primary)' },
                     { label: 'Customers', value: kpi.customers ?? '—', sub: 'Registered customers', icon: UserPlus, accent: 'var(--primary)' },
                 ].map((stat, i) => (
-                    <div key={i} className="card" style={{ borderTop: `4px solid ${stat.accent}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div key={i} className="card animate-tile" style={{ borderTop: `4px solid ${stat.accent}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', animationDelay: `${0.05 * (i + 1)}s` }}>
                         <div>
                             <div className="text-muted" style={{ fontWeight: 600, fontSize: '0.875rem' }}>{stat.label}</div>
                             <div style={{ fontSize: '2rem', fontWeight: 700, marginTop: '0.25rem' }}>{loading ? '…' : stat.value}</div>
@@ -92,7 +93,7 @@ const AdminDashboard = () => {
             {/* ── Charts ── */}
             <div className="grid grid-cols-2 gap-6">
                 {/* Revenue line */}
-                <div className="card">
+                <div className="card animate-tile" style={{ animationDelay: '0.2s' }}>
                     <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>Revenue (Last 7 Days)</h3>
                     <div style={{ height: 280 }}>
                         <ResponsiveContainer width="100%" height="100%">
@@ -108,7 +109,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Role pie */}
-                <div className="card">
+                <div className="card animate-tile" style={{ animationDelay: '0.25s' }}>
                     <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>User Role Distribution</h3>
                     <div style={{ height: 280, display: 'flex', justifyContent: 'center' }}>
                         <ResponsiveContainer width="100%" height="100%">
@@ -124,7 +125,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Orders per category */}
-                <div className="card">
+                <div className="card animate-tile" style={{ animationDelay: '0.3s' }}>
                     <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>Orders per Category</h3>
                     <div style={{ height: 280 }}>
                         {categoryOrders.length === 0 && !loading ? (
@@ -144,7 +145,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Top 5 products */}
-                <div className="card">
+                <div className="card animate-tile" style={{ animationDelay: '0.35s' }}>
                     <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>Top 5 Selling Products</h3>
                     <div style={{ height: 280 }}>
                         {topProducts.length === 0 && !loading ? (
@@ -166,7 +167,7 @@ const AdminDashboard = () => {
 
             {/* ── Recent activity ── */}
             <div className="grid grid-cols-2 gap-6">
-                <div className="card">
+                <div className="card animate-tile" style={{ animationDelay: '0.4s' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                         <h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Recent Orders</h3>
                     </div>
@@ -197,7 +198,7 @@ const AdminDashboard = () => {
                     )}
                 </div>
 
-                <div className="card">
+                <div className="card animate-tile" style={{ animationDelay: '0.45s' }}>
                     <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1.25rem' }}>Quick Stats</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         {[

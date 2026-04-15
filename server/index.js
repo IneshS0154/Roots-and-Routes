@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import pool from './db.js';
 import logger, { requestLogger } from './logger.js';
 import { initDb } from './initDb.js';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 dotenv.config();
 
@@ -1357,75 +1356,19 @@ app.put('/api/admin/reviews/deletion-requests/:id', async (req, res) => {
 // CHATBOT / DISPUTE ROUTES
 // ════════════════════════════════════════════════════════════════════════════
 
-// ── Gemini AI setup ──────────────────────────────────────────────────────────
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-let geminiClient = null;
+// ── Simple Chatbot Logic ───────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are a friendly, concise customer support assistant for "Roots & Routes", a Sri Lankan agri-commerce platform that connects local farmers with customers.
-
-Your role:
-- Help customers with questions about their orders, deliveries, payments, refunds, product quality, and anything related to the platform.
-- Keep replies SHORT (2-4 sentences max), warm, and helpful.
-- If a customer has a complaint or serious issue, encourage them to click the "File a Complaint" button below the chat.
-- You can reference these features: My Orders (order tracking with status stepper), Products page (browse all farmer products), Cart (shopping), Reviews (post-delivery), and the Complaint form in this chat.
-- For refunds, cancellations, or serious issues, always recommend filing a complaint so admin can take action.
-- Do NOT make up information about specific orders. You do not have access to order data.
-- Respond in plain text only (no markdown symbols). Use a friendly emoji occasionally.
-- If asked something unrelated to the platform or shopping, politely redirect.`;
-
-if (GEMINI_API_KEY && GEMINI_API_KEY !== 'YOUR_GEMINI_API_KEY_HERE') {
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  // systemInstruction must go here on getGenerativeModel, NOT in startChat
-  geminiClient = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
-    systemInstruction: SYSTEM_PROMPT,
-    generationConfig: { maxOutputTokens: 300, temperature: 0.7 },
-  });
-  logger.info('Gemini AI model ready (gemini-1.5-flash)');
-} else {
-  logger.warn('GEMINI_API_KEY not set – chatbot will use fallback replies');
-}
-
-async function getGeminiReply(conversationHistory, userMessage) {
-  if (!geminiClient) {
-    // Fallback keyword matcher
-    const lower = userMessage.toLowerCase();
-    if (lower.includes('track') || lower.includes('order status')) return "You can track your order in the My Orders section. Click any order to see the live delivery status. 📦";
-    if (lower.includes('refund')) return "Refund requests are handled by our admin team. Please use the File a Complaint button below and include your order number. We will get back to you within 2-3 business days.";
-    if (lower.includes('payment')) return "For payment issues, check your order in My Orders. If the problem persists, please file a complaint and our team will investigate promptly. 💳";
-    if (lower.includes('quality') || lower.includes('damaged') || lower.includes('wrong item')) return "We are sorry to hear that! Please file a complaint using the button below, include your order number and a description, and we will resolve it immediately. 🙏";
-    if (lower.includes('delivery') || lower.includes('delay') || lower.includes('driver')) return "Your driver updates the delivery status in real-time in My Orders. For significant delays, please file a complaint and we will follow up with the driver.";
-    if (lower.includes('cancel')) return "Order cancellations are possible before the driver picks up your order. Please file a complaint with your order number and our team will check if it is still possible.";
-    if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) return "Hello! 👋 How can I help you today? Ask me anything about your orders, products, delivery, payments or refunds!";
-    return "I am not sure about that. Could you provide more details? Or you can file a complaint below and our admin team will help you directly. 😊";
-  }
-
-  try {
-    // Build alternating user/model history for Gemini (must start with user role)
-    // Skip bot-only messages at the start (the greeting) and only include
-    // pairs where customer and bot have exchanged messages
-    const history = [];
-    for (const m of conversationHistory) {
-      if (m.sender_type === 'customer') {
-        history.push({ role: 'user',  parts: [{ text: m.message }] });
-      } else if ((m.sender_type === 'bot' || m.sender_type === 'admin') && history.length > 0) {
-        // Only add model turn if there's already a user turn before it
-        history.push({ role: 'model', parts: [{ text: m.message }] });
-      }
-      // skip bot messages before any user message (e.g. greeting)
-    }
-
-    const chat = geminiClient.startChat({ history });
-    const result = await chat.sendMessage(userMessage);
-    return result.response.text();
-  } catch (err) {
-    logger.error('Gemini API error', { error: err.message });
-    // 429 = quota/rate-limit: give a friendlier message so the bug is clear
-    if (err.status === 429) {
-      return "I'm a little busy right now (rate limit). Please wait a few seconds and try again! 🙏";
-    }
-    return "I am having a little trouble right now. Please try again in a moment, or file a complaint below and our team will help you directly. 😊";
-  }
+function getSimpleBotReply(userMessage) {
+  const lower = userMessage.toLowerCase();
+  if (lower.includes('track') || lower.includes('order status')) return "You can track your order in the My Orders section. Click any order to see the live delivery status. 📦";
+  if (lower.includes('refund')) return "Refund requests are handled by our admin team. Please use the File a Complaint button below and include your order number. We will get back to you within 2-3 business days.";
+  if (lower.includes('payment')) return "For payment issues, check your order in My Orders. If the problem persists, please file a complaint and our team will investigate promptly. 💳";
+  if (lower.includes('quality') || lower.includes('damaged') || lower.includes('wrong item')) return "We are sorry to hear that! Please file a complaint using the button below, include your order number and a description, and we will resolve it immediately. 🙏";
+  if (lower.includes('delivery') || lower.includes('delay') || lower.includes('driver')) return "Your driver updates the delivery status in real-time in My Orders. For significant delays, please file a complaint and we will follow up with the driver.";
+  if (lower.includes('cancel')) return "Order cancellations are possible before the driver picks up your order. Please file a complaint with your order number and our team will check if it is still possible.";
+  if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) return "Hello! 👋 How can I help you today? Ask me anything about your orders, products, delivery, payments or refunds!";
+  
+  return "I am not sure about that. Could you provide more details? Or you can file a complaint below and our admin team will help you directly. 😊";
 }
 
 
@@ -1483,8 +1426,8 @@ app.post('/api/chat/message', async (req, res) => {
       [session_id, message.trim()]
     );
 
-    // Generate Gemini reply (uses history context)
-    const botReply = await getGeminiReply(history, message.trim());
+    // Generate simple local reply
+    const botReply = getSimpleBotReply(message.trim());
 
     await connection.query(
       `INSERT INTO chat_messages (session_id, sender_type, message) VALUES (?, 'bot', ?)`,

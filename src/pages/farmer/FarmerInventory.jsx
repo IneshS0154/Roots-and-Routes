@@ -14,11 +14,11 @@ const StatusBadge = ({ qty, expiryDate }) => {
         const exp = new Date(expiryDate);
         const today = new Date();
         const daysLeft = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
-        if (daysLeft <= 0) return <span style={badge('#9333ea')}>🕒 Expired</span>;
-        if (daysLeft <= 3) return <span style={badge('#f59e0b')}>⏰ Expiring Soon</span>;
+        if (daysLeft <= 0) return <span style={badge('#9333ea')}>Expired</span>;
+        if (daysLeft <= 3) return <span style={badge('#f59e0b')}>Expiring Soon</span>;
     }
     if (Number(qty) === 0) return <span style={badge('#ef4444')}><XCircle size={12} /> Out of Stock</span>;
-    if (Number(qty) < 15)  return <span style={badge('#f59e0b')}><AlertTriangle size={12} /> Low Stock</span>;
+    if (Number(qty) < 15) return <span style={badge('#f59e0b')}><AlertTriangle size={12} /> Low Stock</span>;
     return <span style={badge('#22c55e')}><CheckCircle size={12} /> Active</span>;
 };
 function badge(color) {
@@ -30,14 +30,14 @@ const FarmerInventory = () => {
     const user = getUser();
     const farmerId = user?.id;
 
-    const [inventory, setInventory]   = useState([]);
-    const [edits, setEdits]           = useState({});      // { [inventoryId]: { quantity, harvest_date, expiry_date } }
-    const [loading, setLoading]       = useState(true);
-    const [error, setError]           = useState('');
-    const [savingId, setSavingId]     = useState(null);
-    const [savedId, setSavedId]       = useState(null);
-    const [search, setSearch]         = useState('');
-    const [filterCat, setFilterCat]   = useState('All');
+    const [inventory, setInventory] = useState([]);
+    const [edits, setEdits] = useState({});      // { [inventoryId]: { quantity, harvest_date, expiry_date } }
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [savingId, setSavingId] = useState(null);
+    const [savedId, setSavedId] = useState(null);
+    const [search, setSearch] = useState('');
+    const [filterCat, setFilterCat] = useState('All');
 
     /* ── fetch ── */
     const fetchInventory = useCallback(async () => {
@@ -54,7 +54,7 @@ const FarmerInventory = () => {
                 seedEdits[item.inventory_id] = {
                     quantity: item.quantity,
                     harvest_date: item.harvest_date ? item.harvest_date.split('T')[0] : '',
-                    expiry_date:  item.expiry_date  ? item.expiry_date.split('T')[0]  : '',
+                    expiry_date: item.expiry_date ? item.expiry_date.split('T')[0] : '',
                 };
             });
             setEdits(seedEdits);
@@ -87,9 +87,9 @@ const FarmerInventory = () => {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    quantity:     Number(row.quantity),
+                    quantity: Number(row.quantity),
                     harvest_date: row.harvest_date || null,
-                    expiry_date:  row.expiry_date  || null,
+                    expiry_date: row.expiry_date || null,
                 }),
             });
             const data = await res.json();
@@ -110,9 +110,9 @@ const FarmerInventory = () => {
     };
 
     /* ── derived stats ── */
-    const totalValue  = inventory.reduce((s, i) => s + Number(i.price) * Number(i.quantity), 0);
-    const outOfStock  = inventory.filter(i => Number(i.quantity) === 0).length;
-    const lowStock    = inventory.filter(i => Number(i.quantity) > 0 && Number(i.quantity) < 15).length;
+    const totalValue = inventory.reduce((s, i) => s + Number(i.price) * Number(i.quantity), 0);
+    const outOfStock = inventory.filter(i => Number(i.quantity) === 0).length;
+    const lowStock = inventory.filter(i => Number(i.quantity) > 0 && Number(i.quantity) < 15).length;
 
     /* ── filtered view ── */
     const visible = inventory.filter(p => {
@@ -143,10 +143,10 @@ const FarmerInventory = () => {
             {/* ── Stat cards ─────────────────────────────────────────────── */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1rem', marginBottom: '2rem' }}>
                 {[
-                    { label: 'Total Products',  value: inventory.length,                     color: 'var(--primary)', icon: '📦' },
-                    { label: 'Out of Stock',     value: outOfStock,                           color: '#ef4444',        icon: '🚫' },
-                    { label: 'Low Stock',        value: lowStock,                             color: '#f59e0b',        icon: '⚠️' },
-                    { label: 'Inventory Value',  value: `LKR ${totalValue.toLocaleString()}`, color: '#22c55e',        icon: '💰' },
+                    { label: 'Total Products', value: inventory.length, color: 'var(--primary)', icon: '📦' },
+                    { label: 'Out of Stock', value: outOfStock, color: '#ef4444', icon: '🚫' },
+                    { label: 'Low Stock', value: lowStock, color: '#f59e0b', icon: '⚠️' },
+                    { label: 'Inventory Value', value: `LKR ${totalValue.toLocaleString()}`, color: '#22c55e', icon: '💰' },
                 ].map((s, i) => (
                     <div key={i} className="card" style={{ borderTop: `4px solid ${s.color}`, padding: '1.25rem' }}>
                         <div style={{ fontSize: '1.4rem', marginBottom: '0.4rem' }}>{s.icon}</div>

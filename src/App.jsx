@@ -18,8 +18,6 @@ import DisputeManagement from './pages/admin/DisputeManagement';
 import DeliveryManagement from './pages/admin/DeliveryManagement';
 import AnalyticsReports from './pages/admin/AnalyticsReports';
 import ReviewManagement from './pages/admin/ReviewManagement';
-import SystemSettings from './pages/admin/SystemSettings';
-import Notifications from './pages/admin/Notifications';
 import SellerContact from './pages/admin/SellerContact';
 
 // Farmer
@@ -100,8 +98,6 @@ function AppRoutes() {
         <Route path="deliveries" element={<DeliveryManagement />} />
         <Route path="analytics" element={<AnalyticsReports />} />
         <Route path="reviews" element={<ReviewManagement />} />
-        <Route path="settings" element={<SystemSettings />} />
-        <Route path="notifications" element={<Notifications />} />
       </Route>
 
       {/* Farmer Routes */}
